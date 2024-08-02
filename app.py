@@ -165,14 +165,11 @@ def analyze_compliance(tasks: List[str], anchor_points: List[np.ndarray], thresh
         compliance_report.append((task, compliance))
     return compliance_report
 
-# Switch button to choose between T5 and OpenAI API
-model_choice = st.radio("Choose the model to use for extracting contract terms:", ("T5", "OpenAI API"))
+# File uploader for TXT files
+uploaded_txt = st.file_uploader("Choose a .txt file with the contract", type=["txt"], key="txt_uploader")
 
 # File uploader for CSV files
 uploaded_csv = st.file_uploader("Choose a .csv file with the task description", type=["csv"], key="csv_uploader")
-
-# File uploader for TXT files
-uploaded_txt = st.file_uploader("Choose a .txt file with the contract", type=["txt"], key="txt_uploader")
 
 if uploaded_txt:
     file_path = os.path.join(UPLOAD_FOLDER, uploaded_txt.name)
@@ -183,6 +180,7 @@ if uploaded_txt:
     with open(file_path, 'r') as f:
         contract_text = f.read()
 
+    model_choice = "T5" # hardcoded T5 to make the solution more stable and effective in the context of the API key privacy issues
     if model_choice == "T5":
         terms = extract_terms_with_t5(contract_text)
     else:
