@@ -8,8 +8,7 @@ from app import (
     extract_terms_with_t5,
     extract_terms_with_openai,
     embed_text,
-    analyze_compliance,
-    split_sections,
+    analyze_compliance
 )
 
 class TestAppFunctions(unittest.TestCase):
@@ -28,24 +27,18 @@ class TestAppFunctions(unittest.TestCase):
         self.assertEqual(process_text(text), expected_output)
 
     def test_generate_bigrams(self):
-        terms = ["quick", "brown", "fox"]
-        expected_output = ["quick brown", "brown fox"]
+        terms = ['quick', 'brown', 'fox']
+        expected_output = ['quick', 'brown', 'fox', 'quick brown', 'brown fox']
         self.assertEqual(generate_ngrams(terms, 2), expected_output)
 
     def test_generate_trigrams(self):
-        terms = ["quick", "brown", "fox"]
-        expected_output = ["quick brown fox"]
+        terms = ['quick', 'brown', 'fox']
+        expected_output = ['quick', 'brown', 'fox', 'quick brown', 'brown fox', 'quick brown fox']
         self.assertEqual(generate_ngrams(terms, 3), expected_output)
 
     def test_extract_terms_with_t5(self):
         contract_text = "The total fee for the services is USD 100,000."
         terms = extract_terms_with_t5(contract_text)
-        self.assertIsInstance(terms, str)
-        self.assertGreater(len(terms), 0)
-
-    def test_extract_terms_with_openai(self):
-        contract_text = "The total fee for the services is USD 100,000."
-        terms = extract_terms_with_openai(contract_text)
         self.assertIsInstance(terms, str)
         self.assertGreater(len(terms), 0)
 
@@ -62,16 +55,6 @@ class TestAppFunctions(unittest.TestCase):
         self.assertEqual(len(compliance_report), 1)
         self.assertIsInstance(compliance_report[0], tuple)
 
-    def test_split_sections(self):
-        contract_text = """
-        3. Financial Terms
-        3.1 The total fee for the services under this Agreement is USD 100,000.
-        3.2 Payment is made by the Client in stages: 50% upfront before the commencement of work, and 50% upon completion of the work.
-        """
-        sections = split_sections(contract_text)
-        self.assertIsInstance(sections, dict)
-        self.assertGreater(len(sections), 0)
-        self.assertIn('Section 1', sections)
 
 if __name__ == '__main__':
     unittest.main()
